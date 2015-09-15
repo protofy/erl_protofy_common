@@ -84,7 +84,7 @@ wait_for_stop_2_named_ok_test() ->
 	?assertEqual(ok, protofy_test_util:wait_for_stop(Name, 20)).
 
 wait_for_stop_2_named_timeout_test() ->
-	Pid = proc_lib:spawn(fun() -> timer:sleep(20) end),
+	Pid = proc_lib:spawn(fun() -> timer:sleep(100) end),
 	Name = protofy_test_util_proc_2,
 	register(Name, Pid),
 	?assertEqual({error, timeout}, protofy_test_util:wait_for_stop(Name, 5)).
