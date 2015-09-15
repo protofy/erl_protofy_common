@@ -1,0 +1,31 @@
+1.4.0
+------
+- License changed (owner renamed)
+- 18.0 adjustments
+
+1.3.0
+------
+- protofy_test_util:fetch_ets/3 added
+- README adjusted
+- app.src fixed (version was wrong)
+
+1.2.0
+------
+- protofy_test_util added
+
+1.1.0
+------
+- meck dependency switched to master, since there is no tag compatible with Erlang 17
+- Travis support added.
+
+1.0.0
+-----
+- Disabled type function
+
+0.4.0
+------
+- Changelog introduced
+- New: protofy_time:timestamp_to_micros/1
+- New: protofy_time:micros_to_timestamp/1
+- New: protofy_time:now_timestamp_micros/0
+- License change: address change
