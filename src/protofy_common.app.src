@@ -2,6 +2,6 @@
  [{description, "Protofy common library"},
   {vsn, "1.4.0"},
   {registered, []},
-  {application, [kernel, stdlib]},
+  {applications, [kernel, stdlib]},
   {env, []}
  ]}.
