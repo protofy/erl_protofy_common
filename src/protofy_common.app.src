@@ -1,6 +1,6 @@
 {application, protofy_common,
  [{description, "Protofy common library"},
-  {vsn, "1.4.0"},
+  {vsn, "1.4.2"},
   {registered, []},
   {applications, [kernel, stdlib]},
   {env, []}
