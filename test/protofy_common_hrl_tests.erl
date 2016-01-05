@@ -42,17 +42,19 @@
 -include("protofy_common.hrl").
 
 %% Export types to test if properly defined
--export_type([reason/0,
-			  void/0,
-			  ignored/0,
-			  server_ref/0,
-			  from/0,
-			  regexp/0,
-			  key/0,
-			  proplist/0,
-			  function/0,
-			  argument/0,
-			  fun_opt/0]).
+-export_type([
+  reason/0,
+  void/0,
+  ignored/0,
+  server_ref/0,
+  from/0,
+  regexp/0,
+  key/0,
+  proplist/0,
+  function/0,
+  argument/0,
+  fun_opt/0
+]).
 
 %% ====================================================================
 %% Tests
@@ -61,33 +63,33 @@
 %% Test GV/2 macro
 %% ====================================================================
 gv_2_test_() ->
-	L = [{1,2}, {a,b}, {"c", d}, {<<"e">>, f}, {{g,h}, i}, {[j,k], l}, {m, fun() -> n end}],
-	[{lists:flatten(io_lib:format("~p", [X])),
-	  ?_assertEqual(proplists:get_value(X, L), ?GV(X, L))}
-	|| {X, _} <- L].
+  L = [{1,2}, {a,b}, {"c", d}, {<<"e">>, f}, {{g,h}, i}, {[j,k], l}, {m, fun() -> n end}],
+  [{lists:flatten(io_lib:format("~p", [X])),
+    ?_assertEqual(proplists:get_value(X, L), ?GV(X, L))}
+  || {X, _} <- L].
 
 
 %% Test GV/3 macro
 %% ====================================================================
 gv_3_test_() ->
-	[{"value", ?_assertEqual(value, ?GV(key1, [{key1, value}], default))},
-	 {"default", ?_assertEqual(default, ?GV(key2, [{key1, value}], default))}
-	].
+  [{"value", ?_assertEqual(value, ?GV(key1, [{key1, value}], default))},
+   {"default", ?_assertEqual(default, ?GV(key2, [{key1, value}], default))}
+  ].
 
 
 %% Test GA/2 macro
 %% ====================================================================
 ga_test_() ->
-	L = [{a,b}, {c,d}, {a,e}, {a,f}, {g, k}],
-	?_assertEqual(proplists:get_all_values(a, L), ?GA(a, L)).
+  L = [{a,b}, {c,d}, {a,e}, {a,f}, {g, k}],
+  ?_assertEqual(proplists:get_all_values(a, L), ?GA(a, L)).
 
 
 %% Test GB/2 macro
 %% ====================================================================
 gb_test_() ->
-	L = [{a, true}, b, {c, false}],
-	[{"+ a", ?_assert(?GB(a, L))},
-	 {"+ b", ?_assert(?GB(b, L))},
-	 {"- c", ?_assertNot(?GB(c, L))},
-	 {"- undef", ?_assertNot(?GB(d, L))}
-	].
+  L = [{a, true}, b, {c, false}],
+  [{"+ a", ?_assert(?GB(a, L))},
+   {"+ b", ?_assert(?GB(b, L))},
+   {"- c", ?_assertNot(?GB(c, L))},
+   {"- undef", ?_assertNot(?GB(d, L))}
+  ].

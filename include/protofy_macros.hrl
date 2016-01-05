@@ -57,8 +57,8 @@
 %% ====================================================================
 %% @doc Shortcut for asynchronous reply in a gen_server.
 -define(GEN_SERVER_ASYNC_REPLY(From, Reply, NewState),
-		proc_lib:spawn(fun() -> gen_server:reply(From, Reply) end),
-		{noreply, NewState}).
+    proc_lib:spawn(fun() -> gen_server:reply(From, Reply) end),
+    {noreply, NewState}).
 
 
 -endif.

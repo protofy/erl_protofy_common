@@ -41,11 +41,14 @@
 %% ====================================================================
 %% API functions
 %% ====================================================================
--export([unmock/1,
-		 rcv/1,
-		 wait_for_stop/2,
-		 fetch_ets/3,
-		 expect_ets/4]).
+-export([
+  unmock/1,
+  rcv/1,
+  wait_for_stop/2,
+  fetch_ets/3,
+  expect_ets/4
+]).
+
 
 %% unmock/1
 %% ====================================================================
@@ -53,12 +56,12 @@
 -spec unmock(module()) -> ok.
 %% ====================================================================
 unmock(Mod) ->
-	try
-		meck:unload(Mod),
-		code:ensure_loaded(Mod)
-	catch
-		error:{not_mocked,Mod} -> ok
-	end.
+  try
+    meck:unload(Mod),
+    code:ensure_loaded(Mod)
+  catch
+    error:{not_mocked,Mod} -> ok
+  end.
 
 
 %% rcv/1
@@ -67,11 +70,11 @@ unmock(Mod) ->
 -spec rcv(Timeout :: non_neg_integer()) -> {error, timeout} | term().
 %% ====================================================================
 rcv(Timeout) ->
-	receive
-		X -> X
-	after
-			Timeout -> {error, timeout}
-	end.
+  receive
+    X -> X
+  after
+      Timeout -> {error, timeout}
+  end.
 
 
 %% wait_for_stop/2
@@ -82,21 +85,21 @@ rcv(Timeout) ->
 %% for 1 ms between tries, so you could interpret it as a rough timeout
 %% in ms.
 -spec wait_for_stop(pid() | Name, Tries) -> ok | {error, timeout} when
-	Name :: atom(),
-	Tries :: non_neg_integer().
+  Name :: atom(),
+  Tries :: non_neg_integer().
 %% ====================================================================
 wait_for_stop(_, 0) ->
-	{error, timeout};
+  {error, timeout};
 wait_for_stop(Pid, Tries) when is_pid(Pid) ->
-	case is_process_alive(Pid) of
-		true -> timer:sleep(1), wait_for_stop(Pid, Tries-1);
-		false -> ok
-	end;
+  case is_process_alive(Pid) of
+    true -> timer:sleep(1), wait_for_stop(Pid, Tries-1);
+    false -> ok
+  end;
 wait_for_stop(Name, Tries) when is_atom(Name) ->
-	case whereis(Name) of
-		undefined -> ok;
-		Pid when is_pid(Pid) -> wait_for_stop(Pid, Tries)
-	end.
+  case whereis(Name) of
+    undefined -> ok;
+    Pid when is_pid(Pid) -> wait_for_stop(Pid, Tries)
+  end.
 
 
 %% fetch_ets/3
@@ -107,19 +110,19 @@ wait_for_stop(Name, Tries) when is_atom(Name) ->
 %% for 1 ms between tries, so you could interpret it as a rough timeout
 %% in ms.
 -spec fetch_ets(Tab, key(), Tries) -> {ok, term()} | {error, timeout} when
-	Tab :: ets:tid(),
-	Tries :: non_neg_integer().
+  Tab :: ets:tid(),
+  Tries :: non_neg_integer().
 %% ====================================================================
 fetch_ets(_, _, 0) ->
-	{error, timeout};
+  {error, timeout};
 fetch_ets(Tab, K, Tries) ->
-	case ets:lookup(Tab, K) of
-		[] ->
-			timer:sleep(1),
-			fetch_ets(Tab, K, Tries-1);
-		[X] ->
-			{ok, X}
-	end.
+  case ets:lookup(Tab, K) of
+    [] ->
+      timer:sleep(1),
+      fetch_ets(Tab, K, Tries-1);
+    [X] ->
+      {ok, X}
+  end.
 
 
 %% expect_ets/4
@@ -133,22 +136,22 @@ fetch_ets(Tab, K, Tries) ->
 %% You can either specify V to be a predicate function or a term that
 %% has to match the written value.
 -spec expect_ets(Tab, key(), Value, Tries) -> ok | {error, timeout} | {unexpected, term()} when
-	Tab :: ets:tid(),
-	Value :: term(),
-	Tries :: non_neg_integer().
+  Tab :: ets:tid(),
+  Value :: term(),
+  Tries :: non_neg_integer().
 %% ====================================================================
 expect_ets(Tab, K, V, Tries) ->
-	case fetch_ets(Tab, K, Tries) of
-		{error, timeout} ->
-			{error, timeout};
-		{ok, {K, X}} when is_function(V) ->
-			case V(X) of
-				true -> ok;
-				false -> {unexpected, {K, X}}
-			end;
-		{ok, {K, V}} ->
-			ok;
-		{ok, X} ->
-			{unexpected, X}
-	end.
+  case fetch_ets(Tab, K, Tries) of
+    {error, timeout} ->
+      {error, timeout};
+    {ok, {K, X}} when is_function(V) ->
+      case V(X) of
+        true -> ok;
+        false -> {unexpected, {K, X}}
+      end;
+    {ok, {K, V}} ->
+      ok;
+    {ok, X} ->
+      {unexpected, X}
+  end.
 

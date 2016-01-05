@@ -51,43 +51,43 @@
 %% @doc Test set_cookie/1 with atom, list, binary and {file, X}.
 %% ====================================================================
 set_cookie_test_() ->
-	{setup,
-	 fun() -> start_node() end,
-	 fun(_) -> stop_node() end,
-	 fun(_) ->
-			 [
-			  {"atom", fun set_cookie_atom/0},
-			  {"list", fun set_cookie_list/0},
-			  {"binary", fun set_cookie_binary/0},
- 			  {"file", fun set_cookie_file/0}
-			 ]
-	 end}.
+  {setup,
+   fun() -> start_node() end,
+   fun(_) -> stop_node() end,
+   fun(_) ->
+       [
+        {"atom", fun set_cookie_atom/0},
+        {"list", fun set_cookie_list/0},
+        {"binary", fun set_cookie_binary/0},
+        {"file", fun set_cookie_file/0}
+       ]
+   end}.
 
 
 %% set_cookie_test_/0 workers
 %% ====================================================================
 set_cookie_atom() ->
-	protofy_node:set_cookie('cookie atom'),
-	?assertEqual('cookie atom', erlang:get_cookie()).
+  protofy_node:set_cookie('cookie atom'),
+  ?assertEqual('cookie atom', erlang:get_cookie()).
 
 
 set_cookie_list() ->
-	protofy_node:set_cookie("cookie list"),
-	?assertEqual('cookie list', erlang:get_cookie()).
+  protofy_node:set_cookie("cookie list"),
+  ?assertEqual('cookie list', erlang:get_cookie()).
 
 
 set_cookie_binary() ->
-	protofy_node:set_cookie(<<"cookie binary">>),
-	?assertEqual('cookie binary', erlang:get_cookie()).
+  protofy_node:set_cookie(<<"cookie binary">>),
+  ?assertEqual('cookie binary', erlang:get_cookie()).
 
 
 set_cookie_file() ->
-	Fn = "test_cookie",
-	Cookie = <<"cookie file">>,
-	mock_file([{Fn, Cookie}]),
-	protofy_node:set_cookie({file, Fn}),
-	unmock(file),
-	?assertEqual('cookie file', erlang:get_cookie()).
+  Fn = "test_cookie",
+  Cookie = <<"cookie file">>,
+  mock_file([{Fn, Cookie}]),
+  protofy_node:set_cookie({file, Fn}),
+  unmock(file),
+  ?assertEqual('cookie file', erlang:get_cookie()).
 
 
 %% configure_test_/0
@@ -95,83 +95,80 @@ set_cookie_file() ->
 %% @doc Test configure/0, configure/1 with app and config 
 %% ====================================================================
 configure_test_() ->
-	Envs = [
-			{protofy_common, [{cookie, protofy_cookie}]},
-			{other_app, [{cookie, other_cookie}]}
-		   ],
-	{setup,
-	 fun() -> start_node(), mock_application(Envs) end,
-	 fun(_) -> stop_node(), unmock(application) end,
-	 fun(_) ->
-			 [
-			  {"/0", fun configure_own/0},
-			  {"/1 app", fun configure_app/0},
-			  {"/1 proplist", fun configure_proplist/0},
-			  {"/1 undefined", fun configure_undefined/0}
-			 ]
-	 end}.
+  Envs = [{protofy_common, [{cookie, protofy_cookie}]},
+          {other_app, [{cookie, other_cookie}]}],
+  {setup,
+   fun() -> start_node(), mock_application(Envs) end,
+   fun(_) -> stop_node(), unmock(application) end,
+   fun(_) ->
+       [
+        {"/0", fun configure_own/0},
+        {"/1 app", fun configure_app/0},
+        {"/1 proplist", fun configure_proplist/0},
+        {"/1 undefined", fun configure_undefined/0}
+       ]
+   end}.
 
 configure_own() ->
-	protofy_node:configure(),
-	?assertEqual(protofy_cookie, erlang:get_cookie()).
+  protofy_node:configure(),
+  ?assertEqual(protofy_cookie, erlang:get_cookie()).
 
 configure_app() ->
-	protofy_node:configure(other_app),
-	?assertEqual(other_cookie, erlang:get_cookie()).
+  protofy_node:configure(other_app),
+  ?assertEqual(other_cookie, erlang:get_cookie()).
 
 configure_proplist() ->
-	protofy_node:configure([{cookie, proplist_cookie}]),
-	?assertEqual(proplist_cookie, erlang:get_cookie()).
+  protofy_node:configure([{cookie, proplist_cookie}]),
+  ?assertEqual(proplist_cookie, erlang:get_cookie()).
 
 configure_undefined() ->
-	erlang:set_cookie(node(), undefined_cookie),
-	protofy_node:configure([]),
-	?assertEqual(undefined_cookie, erlang:get_cookie()).
+  erlang:set_cookie(node(), undefined_cookie),
+  protofy_node:configure([]),
+  ?assertEqual(undefined_cookie, erlang:get_cookie()).
 
 %% ====================================================================
 %% Internal functions
 %% ====================================================================
 start_node() ->
-	net_kernel:start(
-	  [
-	   erlang:list_to_atom(
-		 "protofy_node_tests_" ++ erlang:integer_to_list(
-		   crypto:rand_uniform(1000000, 9999999))),
-	   shortnames]),
-	ok.
+  net_kernel:start(
+    [erlang:list_to_atom(
+     "protofy_node_tests_" ++ erlang:integer_to_list(
+       crypto:rand_uniform(1000000, 9999999))),
+     shortnames]),
+  ok.
 
 
 stop_node() ->
-	net_kernel:stop(),
-	ok.
-	
+  net_kernel:stop(),
+  ok.
+
 
 mock_file(Files) ->
-	ok = meck:new(file, [unstick, passthrough]),
-	ok = meck:expect(file, read_file,
-					 fun(Fn) ->
-							 case ?GV(Fn, Files) of
-								 undefined -> meck:passthrough([Fn]);
-								 Content -> {ok, Content}
-							 end
-					 end),
-	ok.
+  ok = meck:new(file, [unstick, passthrough]),
+  ok = meck:expect(file, read_file,
+           fun(Fn) ->
+               case ?GV(Fn, Files) of
+                 undefined -> meck:passthrough([Fn]);
+                 Content -> {ok, Content}
+               end
+           end),
+  ok.
 
 
 mock_application(Envs) ->
-	ok = meck:new(application, [unstick, passthrough]),
-	ok = meck:expect(application, load, fun(_) -> ok end),
-	ok = meck:expect(application, get_env,
-					 fun(App, Key) ->
-							 case ?GV(App, Envs) of
-								 undefined -> undefined;
-								 Env -> ?GV(Key, Env)
-							 end
-					 end),
-	ok.
-										
+  ok = meck:new(application, [unstick, passthrough]),
+  ok = meck:expect(application, load, fun(_) -> ok end),
+  ok = meck:expect(application, get_env,
+           fun(App, Key) ->
+               case ?GV(App, Envs) of
+                 undefined -> undefined;
+                 Env -> ?GV(Key, Env)
+               end
+           end),
+  ok.
+
 
 unmock(Mod) ->
-	meck:unload(Mod).
+  meck:unload(Mod).
 
 

@@ -47,12 +47,15 @@
 %% ====================================================================
 %% API functions
 %% ====================================================================
--export([ntoa/1,
-		 port_number/1,
-		 is_ip_address_str/1,
-		 is_ip_address_tuple/1,
-		 is_ip_address/1,
-		 is_port_number/1]).
+-export([
+  ntoa/1,
+  port_number/1,
+  is_ip_address_str/1,
+  is_ip_address_tuple/1,
+  is_ip_address/1,
+  is_port_number/1
+]).
+
 
 %% ntoa/1
 %% ====================================================================
@@ -63,11 +66,11 @@
 -spec ntoa(Addr :: inet:ip_address()) -> string() | {error, einval}.
 %% ====================================================================
 ntoa(Addr) ->
-	R = inet:ntoa(Addr),
-	case is_ip_address_str(R) of
-		true -> R;
-		false -> {error, einval}
-	end.
+  R = inet:ntoa(Addr),
+  case is_ip_address_str(R) of
+    true -> R;
+    false -> {error, einval}
+  end.
 
 
 %% port_number/1
@@ -76,14 +79,14 @@ ntoa(Addr) ->
 -spec port_number(Port :: integer() | binary() | list()) -> inet:port_number().
 %% ====================================================================
 port_number(Port) when is_integer(Port) ->
-	case is_port_number(Port) of
-		true -> Port;
-		false -> erlang:error(einval)
-	end;
+  case is_port_number(Port) of
+    true -> Port;
+    false -> erlang:error(einval)
+  end;
 port_number(Port) when is_binary(Port) ->
-	port_number(erlang:binary_to_integer(Port));
+  port_number(erlang:binary_to_integer(Port));
 port_number(Port) when is_list(Port) ->
-	port_number(erlang:list_to_integer(Port)).
+  port_number(erlang:list_to_integer(Port)).
 
 
 %% is_ip_address_str/1
@@ -92,12 +95,12 @@ port_number(Port) when is_list(Port) ->
 -spec is_ip_address_str(Addr :: string()) -> boolean().
 %% ====================================================================
 is_ip_address_str(Addr) when is_binary(Addr) ->
-	is_ip_address_str(erlang:binary_to_list(Addr));
+  is_ip_address_str(erlang:binary_to_list(Addr));
 is_ip_address_str(Addr) ->
-	case inet:parse_address(Addr) of
-		{ok, _} -> true;
-		_ -> false
-	end.
+  case inet:parse_address(Addr) of
+    {ok, _} -> true;
+    _ -> false
+  end.
 
 
 %% is_ip_address_tuple/1
@@ -109,12 +112,12 @@ is_ip_address_str(Addr) ->
 -spec is_ip_address_tuple(Addr :: inet:ip_address()) -> boolean().
 %% ====================================================================
 is_ip_address_tuple(Addr) ->
-	try
-		is_ip_address_str(inet:ntoa(Addr))
-	catch
-		error:badarg -> false
-	end.
-		  
+  try
+    is_ip_address_str(inet:ntoa(Addr))
+  catch
+    error:badarg -> false
+  end.
+
 
 %% is_ip_address/1
 %% ====================================================================
@@ -122,10 +125,10 @@ is_ip_address_tuple(Addr) ->
 -spec is_ip_address(Addr :: string() | inet:ip_address()) -> boolean().
 %% ====================================================================
 is_ip_address(Addr) when is_tuple(Addr) ->
-	is_ip_address_tuple(Addr);
+  is_ip_address_tuple(Addr);
 is_ip_address(Addr) ->
-	is_ip_address_str(Addr).
-	
+  is_ip_address_str(Addr).
+
 
 %% is_port_number/1
 %% ====================================================================
@@ -133,10 +136,10 @@ is_ip_address(Addr) ->
 -spec is_port_number(Port :: term()) -> boolean().
 %% ====================================================================
 is_port_number(Port) when is_integer(Port), Port >= 0, Port < 65536 ->
-	true;
+  true;
 is_port_number(_) ->
-	false.
-	
+  false.
+
 
 %% ====================================================================
 %% Internal functions

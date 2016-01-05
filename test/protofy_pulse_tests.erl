@@ -44,14 +44,14 @@
 -export([]).
 
 all_test_() ->
-	Pulse = protofy_pulse:new(),
-	String = protofy_pulse:to_string(Pulse),
-	[
-	 {"new/0 is binary", ?_assert(is_binary(Pulse))},
-	 {"to_string/1 is string", ?_assert(is_list(String))},
-	 {"from_string(to_string(X)) is identity of X", ?_assertEqual(Pulse, protofy_pulse:from_string(String))},
-	 {"new/0 is not same as before", ?_assertNotEqual(Pulse, protofy_pulse:new())}
-	]. 
+  Pulse = protofy_pulse:new(),
+  String = protofy_pulse:to_string(Pulse),
+  [
+   {"new/0 is binary", ?_assert(is_binary(Pulse))},
+   {"to_string/1 is string", ?_assert(is_list(String))},
+   {"from_string(to_string(X)) is identity of X", ?_assertEqual(Pulse, protofy_pulse:from_string(String))},
+   {"new/0 is not same as before", ?_assertNotEqual(Pulse, protofy_pulse:new())}
+  ].
 
 %% ====================================================================
 %% Internal functions

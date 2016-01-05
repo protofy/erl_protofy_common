@@ -44,7 +44,7 @@
 -type void() :: term().
 -type ignored() :: term().
 -type server_ref() :: pid()
-					| atom().
+                    | atom().
 -type from() :: {pid(), term()}.
 
 -type regexp() :: iodata().
@@ -54,7 +54,7 @@
 %%-type function() :: atom().
 -type argument() :: term().
 -type fun_opt() :: {module(), function()}
-				 | {module(), function(), [argument()]}
-				 | fun().
+                 | {module(), function(), [argument()]}
+                 | fun().
 
 -endif.

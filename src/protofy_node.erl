@@ -46,17 +46,19 @@
 %% Types
 %% ====================================================================
 -type cookie() :: atom()
-				| binary()
-				| list()
-				| {file, file:name_all()}.
+                | binary()
+                | list()
+                | {file, file:name_all()}.
 -type node_opt() :: {cookie, cookie()}.
 
 
 %% ====================================================================
 %% API functions
 %% ====================================================================
--export([configure/0, configure/1,
-		 set_cookie/1, set_cookie/2]).
+-export([
+  configure/0, configure/1,
+  set_cookie/1, set_cookie/2
+]).
 
 -include("protofy_common.hrl").
 -define(APP, protofy_common).
@@ -68,27 +70,25 @@
 -spec configure() -> ok.
 %% ====================================================================
 configure() ->
-	application:load(?APP),
-	configure(?APP).
+  application:load(?APP),
+  configure(?APP).
 
 
 %% configure/1
 %% ====================================================================
 %% @doc Configure node according to app config of App or by proplist
 -spec configure(Input) -> ok when
-	Input :: atom()
-		   | [node_opt()].
+  Input :: atom()
+       | [node_opt()].
 %% ====================================================================
 configure(App) when is_atom(App) ->
-	configure([
-			   {cookie, application:get_env(App, cookie)}
-			 ]);
+  configure([{cookie, application:get_env(App, cookie)}]);
 configure(Config) ->
-	case ?GV(cookie, Config) of
-		undefined -> ok;
-		Cookie -> set_cookie(Cookie)
-	end,
-	ok.
+  case ?GV(cookie, Config) of
+    undefined -> ok;
+    Cookie -> set_cookie(Cookie)
+  end,
+  ok.
 
 
 %% set_cookie/1
@@ -97,7 +97,7 @@ configure(Config) ->
 -spec set_cookie(cookie()) -> true.
 %% ====================================================================
 set_cookie(Cookie) ->
-	set_cookie(node(), Cookie).
+  set_cookie(node(), Cookie).
 
 
 %% set_cookie/2
@@ -107,12 +107,12 @@ set_cookie(Cookie) ->
 -spec set_cookie(node(), cookie()) -> true.
 %% ====================================================================
 set_cookie(Node, {file, Fn}) ->
-	{ok, C} = file:read_file(Fn),
-	set_cookie(Node, C);
+  {ok, C} = file:read_file(Fn),
+  set_cookie(Node, C);
 set_cookie(Node, C) when is_list(C) ->
-	set_cookie(Node, erlang:list_to_atom(C));
+  set_cookie(Node, erlang:list_to_atom(C));
 set_cookie(Node, C) when is_binary(C) ->
-	set_cookie(Node, erlang:binary_to_list(C));
+  set_cookie(Node, erlang:binary_to_list(C));
 set_cookie(Node, C) when is_atom(C) ->
-	true =:= erlang:set_cookie(Node, C).
-	
+  true =:= erlang:set_cookie(Node, C).
+

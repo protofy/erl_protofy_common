@@ -41,119 +41,119 @@
 %% Test unmock/1
 %% ====================================================================
 unmock_1_test_() ->
-	R0 = protofy_test_util:unmock(protofy_time),
-	ok = meck:new(protofy_time, []),
-	ok = meck:expect(protofy_time, readable, fun(_) -> "Nope" end),
-	R1 = protofy_time:readable({{2000,1,2},{3,4,5}}),
-	protofy_test_util:unmock(protofy_time),
-	R2 = protofy_time:readable({{2000,1,2},{3,4,5}}),
-	[
-	 {"Unmocked before", ?_assertEqual(ok, R0)},
-	 {"Mocked", ?_assertEqual("Nope", R1)},
-	 {"Unmocked", ?_assertEqual("2000-01-02 03:04:05", R2)}
-	].
+  R0 = protofy_test_util:unmock(protofy_time),
+  ok = meck:new(protofy_time, []),
+  ok = meck:expect(protofy_time, readable, fun(_) -> "Nope" end),
+  R1 = protofy_time:readable({{2000,1,2},{3,4,5}}),
+  protofy_test_util:unmock(protofy_time),
+  R2 = protofy_time:readable({{2000,1,2},{3,4,5}}),
+  [
+   {"Unmocked before", ?_assertEqual(ok, R0)},
+   {"Mocked", ?_assertEqual("Nope", R1)},
+   {"Unmocked", ?_assertEqual("2000-01-02 03:04:05", R2)}
+  ].
 
 
 %% Test rcv/1
 %% ====================================================================
 rcv_1_test_() ->
-	R1 = protofy_test_util:rcv(10),
-	self() ! test,
-	R2 = protofy_test_util:rcv(10),
-	R3 = protofy_test_util:rcv(10),
-	[
-	 {"Before sending", ?_assertEqual({error, timeout}, R1)},
-	 {"After sending", ?_assertEqual(test, R2)},
-	 {"After receiving", ?_assertEqual({error, timeout}, R3)}
-	].
+  R1 = protofy_test_util:rcv(10),
+  self() ! test,
+  R2 = protofy_test_util:rcv(10),
+  R3 = protofy_test_util:rcv(10),
+  [
+   {"Before sending", ?_assertEqual({error, timeout}, R1)},
+   {"After sending", ?_assertEqual(test, R2)},
+   {"After receiving", ?_assertEqual({error, timeout}, R3)}
+  ].
 
 %% Test wait_for_stop/2
 %% ====================================================================
 wait_for_stop_2_unnamed_ok_test() ->
-	Pid = proc_lib:spawn(fun() -> timer:sleep(10) end),
-	?assertEqual(ok, protofy_test_util:wait_for_stop(Pid, 20)).
+  Pid = proc_lib:spawn(fun() -> timer:sleep(10) end),
+  ?assertEqual(ok, protofy_test_util:wait_for_stop(Pid, 20)).
 
 wait_for_stop_2_unnamed_timeout_test() ->
-	Pid = proc_lib:spawn(fun() -> timer:sleep(20) end),
-	?assertEqual({error, timeout}, protofy_test_util:wait_for_stop(Pid, 5)).
-	
+  Pid = proc_lib:spawn(fun() -> timer:sleep(20) end),
+  ?assertEqual({error, timeout}, protofy_test_util:wait_for_stop(Pid, 5)).
+
 wait_for_stop_2_named_ok_test() ->
-	Pid = proc_lib:spawn(fun() -> timer:sleep(10) end),
-	Name = protofy_test_util_proc_1,
-	register(Name, Pid),
-	?assertEqual(ok, protofy_test_util:wait_for_stop(Name, 20)).
+  Pid = proc_lib:spawn(fun() -> timer:sleep(10) end),
+  Name = protofy_test_util_proc_1,
+  register(Name, Pid),
+  ?assertEqual(ok, protofy_test_util:wait_for_stop(Name, 20)).
 
 wait_for_stop_2_named_timeout_test() ->
-	Pid = proc_lib:spawn(fun() -> timer:sleep(100) end),
-	Name = protofy_test_util_proc_2,
-	register(Name, Pid),
-	?assertEqual({error, timeout}, protofy_test_util:wait_for_stop(Name, 5)).
+  Pid = proc_lib:spawn(fun() -> timer:sleep(100) end),
+  Name = protofy_test_util_proc_2,
+  register(Name, Pid),
+  ?assertEqual({error, timeout}, protofy_test_util:wait_for_stop(Name, 5)).
 
 wait_for_stop_2_named_not_started_test() ->
-	Name = protofy_test_util_proc_3,
-	?assertEqual(ok, protofy_test_util:wait_for_stop(Name, 5)).
+  Name = protofy_test_util_proc_3,
+  ?assertEqual(ok, protofy_test_util:wait_for_stop(Name, 5)).
 
 
 %% Test fetch_ets/3
 %% ====================================================================
 fetch_ets_3_test_() ->
-	{setup,
-	 fun() ->
-			 Tab = ets:new(protofy_test_util_test_fetch_ets, [public, named_table]),
-			 ets:insert(Tab, {test_2, test_value}),
-			 Tab
-	 end,
-	 fun(Tab) ->
-			 ets:delete(Tab)
-	 end,
-	 fun(Tab) ->
-			 [
-			  {"timeout", ?_assertEqual({error, timeout}, protofy_test_util:fetch_ets(Tab, test_1, 5))},
-			  {"found", ?_assertEqual({ok, {test_2, test_value}}, protofy_test_util:fetch_ets(Tab, test_2, 10))}
-			 ]
-	 end}.
-			 
+  {setup,
+   fun() ->
+       Tab = ets:new(protofy_test_util_test_fetch_ets, [public, named_table]),
+       ets:insert(Tab, {test_2, test_value}),
+       Tab
+   end,
+   fun(Tab) ->
+       ets:delete(Tab)
+   end,
+   fun(Tab) ->
+       [
+        {"timeout", ?_assertEqual({error, timeout}, protofy_test_util:fetch_ets(Tab, test_1, 5))},
+        {"found", ?_assertEqual({ok, {test_2, test_value}}, protofy_test_util:fetch_ets(Tab, test_2, 10))}
+       ]
+   end}.
+
 
 %% Test expect_ets/4
 %% ====================================================================
 expect_ets_4_test_() ->
-	{setup,
-	 fun() ->
-			 Tab = ets:new(protofy_test_util_test_ets, [public, named_table]),
-			 Tab
-	 end,
-	 fun(Tab) ->
-			 ets:delete(Tab)
-	 end,
-	 fun(Tab) ->
-			 [
-			  {"timeout", ?_assertEqual({error, timeout}, protofy_test_util:expect_ets(Tab, test_1, test_2, 5))},
-			  {"ok with fun", fun() -> test_expect_ets_4_match_fun_ok(Tab) end},
-			  {"unexpected with fun", fun() -> test_expect_ets_4_match_fun_unexpected(Tab) end},
-			  {"ok with term", fun() -> test_expect_ets_4_match_term_ok(Tab) end},
-			  {"unexpected with term", fun() -> test_expect_ets_4_match_term_unexpected(Tab) end}
-			 ]
-	 end}.
+  {setup,
+   fun() ->
+       Tab = ets:new(protofy_test_util_test_ets, [public, named_table]),
+       Tab
+   end,
+   fun(Tab) ->
+       ets:delete(Tab)
+   end,
+   fun(Tab) ->
+       [
+        {"timeout", ?_assertEqual({error, timeout}, protofy_test_util:expect_ets(Tab, test_1, test_2, 5))},
+        {"ok with fun", fun() -> test_expect_ets_4_match_fun_ok(Tab) end},
+        {"unexpected with fun", fun() -> test_expect_ets_4_match_fun_unexpected(Tab) end},
+        {"ok with term", fun() -> test_expect_ets_4_match_term_ok(Tab) end},
+        {"unexpected with term", fun() -> test_expect_ets_4_match_term_unexpected(Tab) end}
+       ]
+   end}.
 
 test_expect_ets_4_match_fun_ok(Tab) ->
-	ets:insert(Tab, {test_3, test_4}),
-	Fun = fun(test_4) -> true;
-			 (_) -> false end,
-	?assertEqual(ok, protofy_test_util:expect_ets(Tab, test_3, Fun, 10)).
-	
+  ets:insert(Tab, {test_3, test_4}),
+  Fun = fun(test_4) -> true;
+           (_)      -> false end,
+  ?assertEqual(ok, protofy_test_util:expect_ets(Tab, test_3, Fun, 10)).
+
 test_expect_ets_4_match_fun_unexpected(Tab) ->
-	ets:insert(Tab, {test_5, test_6}),
-	Fun = fun(test_4) -> true;
-			 (_) -> false end,
-	?assertEqual({unexpected, {test_5, test_6}}, protofy_test_util:expect_ets(Tab, test_5, Fun, 10)).
+  ets:insert(Tab, {test_5, test_6}),
+  Fun = fun(test_4) -> true;
+           (_)      -> false end,
+  ?assertEqual({unexpected, {test_5, test_6}}, protofy_test_util:expect_ets(Tab, test_5, Fun, 10)).
 
 test_expect_ets_4_match_term_ok(Tab) ->
-	ets:insert(Tab, {test_7, test_8}),
-	?assertEqual(ok, protofy_test_util:expect_ets(Tab, test_7, test_8, 10)).
+  ets:insert(Tab, {test_7, test_8}),
+  ?assertEqual(ok, protofy_test_util:expect_ets(Tab, test_7, test_8, 10)).
 
 test_expect_ets_4_match_term_unexpected(Tab) ->
-	ets:insert(Tab, {test_9, test_10}),
-	?assertEqual({unexpected, {test_9, test_10}}, protofy_test_util:expect_ets(Tab, test_9, test_8, 10)).
+  ets:insert(Tab, {test_9, test_10}),
+  ?assertEqual({unexpected, {test_9, test_10}}, protofy_test_util:expect_ets(Tab, test_9, test_8, 10)).
 
 %% ====================================================================
 %% Internal functions

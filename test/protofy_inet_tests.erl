@@ -48,77 +48,77 @@
 %% Test protofy_inet:ntoa/1
 %% ====================================================================
 ntoa_test_() ->
-	OK = fun(X) -> protofy_inet:is_ip_address_str(X) end,
-	[
-	 [{"ok " ++ ?N(X), ?_assert(OK(protofy_inet:ntoa(X)))} || X <- addrs(tuple, valid)],
-	 [{"error " ++ ?N(X), ?_assertEqual({error, einval}, protofy_inet:ntoa(X))} || X <- addrs(tuple, invalid)]
-	].
-	 
+  OK = fun(X) -> protofy_inet:is_ip_address_str(X) end,
+  [
+   [{"ok " ++ ?N(X), ?_assert(OK(protofy_inet:ntoa(X)))} || X <- addrs(tuple, valid)],
+   [{"error " ++ ?N(X), ?_assertEqual({error, einval}, protofy_inet:ntoa(X))} || X <- addrs(tuple, invalid)]
+  ].
+
 
 %% Test protofy_inet:port_number/1
 %% ====================================================================
 port_number_test_() ->
-	OK = [{0,0}, {1,1}, {65535,65535},
-		  {"0",0}, {"1",1}, {"65535",65535},
-		  {<<"0">>,0}, {<<"1">>,1}, {<<"65535">>,65535}],
-	Einval = [-1, 65536, <<"-1">>, "-1"],
-	EFC = ['1', {1}],
-	Ebadarg = [[1]],
-	[
-	 [{"ok " ++ ?N(X), ?_assertEqual(E, protofy_inet:port_number(X))} || {X,E} <- OK],
-	 [{"error einval " ++ ?N(X), ?_assertError(einval, protofy_inet:port_number(X))} || X <- Einval],
-	 [{"error function_clause" ++ ?N(X), ?_assertException(error, function_clause, protofy_inet:port_number(X))} || X <- EFC],
-	 [{"error badarg" ++ ?N(X), ?_assertException(error, badarg, protofy_inet:port_number(X))} || X <- Ebadarg]
-	].
+  OK = [{0,0}, {1,1}, {65535,65535},
+        {"0",0}, {"1",1}, {"65535",65535},
+        {<<"0">>,0}, {<<"1">>,1}, {<<"65535">>,65535}],
+  Einval = [-1, 65536, <<"-1">>, "-1"],
+  EFC = ['1', {1}],
+  Ebadarg = [[1]],
+  [
+   [{"ok " ++ ?N(X), ?_assertEqual(E, protofy_inet:port_number(X))} || {X,E} <- OK],
+   [{"error einval " ++ ?N(X), ?_assertError(einval, protofy_inet:port_number(X))} || X <- Einval],
+   [{"error function_clause" ++ ?N(X), ?_assertException(error, function_clause, protofy_inet:port_number(X))} || X <- EFC],
+   [{"error badarg" ++ ?N(X), ?_assertException(error, badarg, protofy_inet:port_number(X))} || X <- Ebadarg]
+  ].
 
 
 %% Test protofy_inet:is_ip_address_str/1
 %% ====================================================================
 is_ip_address_str_test_() ->
-	[
-	 {"+ <<\"1.2.3.4\">>", ?_assertEqual(true, protofy_inet:is_ip_address_str(<<"1.2.3.4">>))},
-	 [{"+ \"" ++ X ++ "\"", ?_assertEqual(true, protofy_inet:is_ip_address_str(X))} || X <- addrs(str, valid)],
-	 [{"- \"" ++ X ++ "\"", ?_assertEqual(false, protofy_inet:is_ip_address_str(X))} || X <- addrs(str, invalid)],
-	 {"- 123", ?_assertEqual(false, protofy_inet:is_ip_address_str(123))},
-	 {"- '123'", ?_assertEqual(false, protofy_inet:is_ip_address_str('123'))}
-	].
+  [
+   {"+ <<\"1.2.3.4\">>", ?_assertEqual(true, protofy_inet:is_ip_address_str(<<"1.2.3.4">>))},
+   [{"+ \"" ++ X ++ "\"", ?_assertEqual(true, protofy_inet:is_ip_address_str(X))} || X <- addrs(str, valid)],
+   [{"- \"" ++ X ++ "\"", ?_assertEqual(false, protofy_inet:is_ip_address_str(X))} || X <- addrs(str, invalid)],
+   {"- 123", ?_assertEqual(false, protofy_inet:is_ip_address_str(123))},
+   {"- '123'", ?_assertEqual(false, protofy_inet:is_ip_address_str('123'))}
+  ].
 
 
 %% Test protofy_inet:is_ip_address_tuple/1
 %% ====================================================================
 is_ip_address_tuple_test_() ->
-	[
-	 [{"+ " ++ ?N(X), ?_assertEqual(true, protofy_inet:is_ip_address_tuple(X))} || X <- addrs(tuple, valid)],
-	 [{"- " ++ ?N(X), ?_assertEqual(false, protofy_inet:is_ip_address_tuple(X))} || X <- addrs(tuple, invalid)],
-	 {"- 'ip'", ?_assertEqual(false, protofy_inet:is_ip_address_tuple(ip))},
-	 {"- \"0.0.0.0\"", ?_assertEqual(false, protofy_inet:is_ip_address_tuple("0.0.0.0"))},
-	 {"- badarg {1,2,3,4.0}}", ?_assertEqual(false, protofy_inet:is_ip_address_tuple({1,2,3,4.0}))}
-	].
+  [
+   [{"+ " ++ ?N(X), ?_assertEqual(true, protofy_inet:is_ip_address_tuple(X))} || X <- addrs(tuple, valid)],
+   [{"- " ++ ?N(X), ?_assertEqual(false, protofy_inet:is_ip_address_tuple(X))} || X <- addrs(tuple, invalid)],
+   {"- 'ip'", ?_assertEqual(false, protofy_inet:is_ip_address_tuple(ip))},
+   {"- \"0.0.0.0\"", ?_assertEqual(false, protofy_inet:is_ip_address_tuple("0.0.0.0"))},
+   {"- badarg {1,2,3,4.0}}", ?_assertEqual(false, protofy_inet:is_ip_address_tuple({1,2,3,4.0}))}
+  ].
 
 
 %% Test protofy_inet:is_ip_address/1
 %% ====================================================================
 is_ip_address_test_() ->
-	[
-	 {"+ <<\"1.2.3.4\">>", ?_assertEqual(true, protofy_inet:is_ip_address(<<"1.2.3.4">>))},
-	 [{"+ \"" ++ X ++ "\"", ?_assertEqual(true, protofy_inet:is_ip_address(X))} || X <- addrs(str, valid)],
-	 [{"+ " ++ ?N(X), ?_assertEqual(true, protofy_inet:is_ip_address(X))} || X <- addrs(tuple, valid)],
-	 [{"- \"" ++ X ++ "\"", ?_assertEqual(false, protofy_inet:is_ip_address(X))} || X <- addrs(str, invalid)],
-	 [{"- " ++ ?N(X), ?_assertEqual(false, protofy_inet:is_ip_address(X))} || X <- addrs(tuple, invalid)],
-	 {"- 123", ?_assertEqual(false, protofy_inet:is_ip_address(123))},
-	 {"- '123'", ?_assertEqual(false, protofy_inet:is_ip_address('123'))}
-	].
+  [
+   {"+ <<\"1.2.3.4\">>", ?_assertEqual(true, protofy_inet:is_ip_address(<<"1.2.3.4">>))},
+   [{"+ \"" ++ X ++ "\"", ?_assertEqual(true, protofy_inet:is_ip_address(X))} || X <- addrs(str, valid)],
+   [{"+ " ++ ?N(X), ?_assertEqual(true, protofy_inet:is_ip_address(X))} || X <- addrs(tuple, valid)],
+   [{"- \"" ++ X ++ "\"", ?_assertEqual(false, protofy_inet:is_ip_address(X))} || X <- addrs(str, invalid)],
+   [{"- " ++ ?N(X), ?_assertEqual(false, protofy_inet:is_ip_address(X))} || X <- addrs(tuple, invalid)],
+   {"- 123", ?_assertEqual(false, protofy_inet:is_ip_address(123))},
+   {"- '123'", ?_assertEqual(false, protofy_inet:is_ip_address('123'))}
+  ].
 
 
 %% Test protofy_inet:is_port_number/1
 %% ====================================================================
 is_port_number_test_() ->
-	True = [0, 1, 65535],
-	False = [-1, '1', "1", <<"1">>, {1}, [1]],
-	[
-	 [{"+ " ++ ?N(X), ?_assertEqual(true, protofy_inet:is_port_number(X))} || X <- True],  
-	 [{"- " ++ ?N(X), ?_assertEqual(false, protofy_inet:is_port_number(X))} || X <- False]
-	].
+  True = [0, 1, 65535],
+  False = [-1, '1', "1", <<"1">>, {1}, [1]],
+  [
+   [{"+ " ++ ?N(X), ?_assertEqual(true, protofy_inet:is_port_number(X))} || X <- True],
+   [{"- " ++ ?N(X), ?_assertEqual(false, protofy_inet:is_port_number(X))} || X <- False]
+  ].
 
 %% ====================================================================
 %% Internal functions
@@ -129,15 +129,15 @@ is_port_number_test_() ->
 %% @doc Return IP addresses in string or tuple format, valid or invalid.
 %% ====================================================================
 addrs(str, valid) ->
-	["1.2.3.4", "0.0.0.0", "255.255.255.255", "256", "1.2.3", "1.2", "0x256", "0x10.2.3.4",
-	 "::1", "::", "beef::15de:adca:7f00:d700", "c01d:c0ff:eeb0:0575:ca7f:ace5:a5ef:fec7"];
+  ["1.2.3.4", "0.0.0.0", "255.255.255.255", "256", "1.2.3", "1.2", "0x256", "0x10.2.3.4",
+   "::1", "::", "beef::15de:adca:7f00:d700", "c01d:c0ff:eeb0:0575:ca7f:ace5:a5ef:fec7"];
 addrs(str, invalid) ->
-	["-1.2.3.4", "256.255.255.255", "::-1", "c0ds:a1ad",
-	 "5ca1:ab1e:8a77:1eca:75ac:edee:17ac::71c5"];
+  ["-1.2.3.4", "256.255.255.255", "::-1", "c0ds:a1ad",
+   "5ca1:ab1e:8a77:1eca:75ac:edee:17ac::71c5"];
 addrs(tuple, valid) ->
-	[{0,0,0,0}, {1,2,3,4}, {255,255,255,255}, {0,0,0,0,0,0,0,0}, {65535,1,2,3,4,5,6,7}];
+  [{0,0,0,0}, {1,2,3,4}, {255,255,255,255}, {0,0,0,0,0,0,0,0}, {65535,1,2,3,4,5,6,7}];
 addrs(tuple, invalid) ->
-	[{-1,0,0,0}, {1,2,3,4,5}, {256,0,0,0}, {65536,1,2,3,4,5,6,7}].
+  [{-1,0,0,0}, {1,2,3,4,5}, {256,0,0,0}, {65536,1,2,3,4,5,6,7}].
 
 
 

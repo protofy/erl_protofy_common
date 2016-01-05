@@ -44,13 +44,14 @@
 
 -include("protofy_common.hrl").
 
+
 %% new/0
 %% ====================================================================
 %% @doc Return new pulse
 -spec new() -> pulse().
 %% ====================================================================
 new() ->
-	uuid:uuid4().
+  uuid:uuid4().
 
 
 %% to_string/1
@@ -59,7 +60,7 @@ new() ->
 -spec to_string(Pulse :: pulse()) -> string().
 %% ====================================================================
 to_string(Pulse) ->
-	uuid:to_string(Pulse).
+  uuid:to_string(Pulse).
 
 
 %% from_string/1
@@ -68,5 +69,5 @@ to_string(Pulse) ->
 -spec from_string(PulseString :: string()) -> pulse().
 %% ====================================================================
 from_string(PulseString) ->
-	uuid:to_binary(PulseString).
+  uuid:to_binary(PulseString).
 

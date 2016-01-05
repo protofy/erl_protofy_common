@@ -51,67 +51,67 @@
 -define(READABLE, "2013-09-12 18:21:11"). 
 
 readable_default_test_() ->
-	[
-	 {"datetime", ?_assertEqual(?READABLE, protofy_time:readable(?DATETIME))},
-	 {"timestamp", ?_assertEqual(?READABLE, protofy_time:readable(?TIMESTAMP))}
-	].
+  [
+   {"datetime", ?_assertEqual(?READABLE, protofy_time:readable(?DATETIME))},
+   {"timestamp", ?_assertEqual(?READABLE, protofy_time:readable(?TIMESTAMP))}
+  ].
 
 
 format_test_() ->
-	[
-	 {"datetime", ?_assertEqual(?SHORT, protofy_time:format(?SHORT_FMT, ?DATETIME))},
-	 {"timestamp", ?_assertEqual(?SHORT, protofy_time:format(?SHORT_FMT, ?TIMESTAMP))}
-	].
+  [
+   {"datetime", ?_assertEqual(?SHORT, protofy_time:format(?SHORT_FMT, ?DATETIME))},
+   {"timestamp", ?_assertEqual(?SHORT, protofy_time:format(?SHORT_FMT, ?TIMESTAMP))}
+  ].
 
 
 timestamp_to_ms_test_() ->
-	Ts = {1379,6570,325955},
-	?_assertEqual(1379006570325, protofy_time:timestamp_to_ms(Ts)).
+  Ts = {1379,6570,325955},
+  ?_assertEqual(1379006570325, protofy_time:timestamp_to_ms(Ts)).
 
 timestamp_to_micros_test_() ->
-	Ts = {1379,6570,325955},
-	?_assertEqual(1379006570325955, protofy_time:timestamp_to_micros(Ts)).
+  Ts = {1379,6570,325955},
+  ?_assertEqual(1379006570325955, protofy_time:timestamp_to_micros(Ts)).
 
 ms_to_timestamp_test_() ->
-	Ms = 1379006570325,
-	[
-	 {"is expected", ?_assertEqual({1379,6570,325000}, protofy_time:ms_to_timestamp(Ms))},
-	 {"Arg < 0 is invalid", ?_assertError(function_clause, protofy_time:ms_to_timestamp(-1))}
-	].
+  Ms = 1379006570325,
+  [
+   {"is expected", ?_assertEqual({1379,6570,325000}, protofy_time:ms_to_timestamp(Ms))},
+   {"Arg < 0 is invalid", ?_assertError(function_clause, protofy_time:ms_to_timestamp(-1))}
+  ].
 
 micros_to_timestamp_test_() ->
-	Micros = 1379006570325123,
-	[
-	 {"is expected", ?_assertEqual({1379,6570,325123}, protofy_time:micros_to_timestamp(Micros))},
-	 {"Arg < 0 is invalid", ?_assertError(function_clause, protofy_time:micros_to_timestamp(-1))}
-	].
+  Micros = 1379006570325123,
+  [
+   {"is expected", ?_assertEqual({1379,6570,325123}, protofy_time:micros_to_timestamp(Micros))},
+   {"Arg < 0 is invalid", ?_assertError(function_clause, protofy_time:micros_to_timestamp(-1))}
+  ].
 
 now_localtime_readable_test_() ->
-	?_assertMatch(?DEFAULT_FMT_PAT, protofy_time:now_localtime_readable()).
+  ?_assertMatch(?DEFAULT_FMT_PAT, protofy_time:now_localtime_readable()).
 
 now_localtime_format_test_() ->
-	?_assertMatch(?SHORT_FMT_PAT, protofy_time:now_localtime_format(?SHORT_FMT)).
+  ?_assertMatch(?SHORT_FMT_PAT, protofy_time:now_localtime_format(?SHORT_FMT)).
 
 
 now_utc_readable_test_() ->
-	?_assertMatch(?DEFAULT_FMT_PAT, protofy_time:now_utc_readable()).
+  ?_assertMatch(?DEFAULT_FMT_PAT, protofy_time:now_utc_readable()).
 
 now_utc_format_test_() ->
-	?_assertMatch(?SHORT_FMT_PAT, protofy_time:now_utc_format(?SHORT_FMT)).
+  ?_assertMatch(?SHORT_FMT_PAT, protofy_time:now_utc_format(?SHORT_FMT)).
 
 now_timestamp_ms_test_() ->
-	Now = protofy_time:now_timestamp_ms(),
-	[
-	 {"is integer", ?_assertMatch(X when is_integer(X), Now)},
-	 {"is >= 0", ?_assertMatch(X when X >= 0, Now)}
-	].
+  Now = protofy_time:now_timestamp_ms(),
+  [
+   {"is integer", ?_assertMatch(X when is_integer(X), Now)},
+   {"is >= 0", ?_assertMatch(X when X >= 0, Now)}
+  ].
 
 now_timestamp_micros_test_() ->
-	Now = protofy_time:now_timestamp_micros(),
-	[
-	 {"is integer", ?_assertMatch(X when is_integer(X), Now)},
-	 {"is >= 0", ?_assertMatch(X when X >= 0, Now)}
-	].
+  Now = protofy_time:now_timestamp_micros(),
+  [
+   {"is integer", ?_assertMatch(X when is_integer(X), Now)},
+   {"is >= 0", ?_assertMatch(X when X >= 0, Now)}
+  ].
 
 %% ====================================================================
 %% Internal functions
