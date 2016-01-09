@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/protofy/erl_protofy_common.svg)](https://travis-ci.org/protofy/erl_protofy_common)
+
 protofy_common
 ==============
 
