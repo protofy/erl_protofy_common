@@ -56,6 +56,11 @@ protofy_test_util
 Some utils to help writing tests.
 
 
+protofy_util
+------------
+Collection of util functions.
+
+
 Further Information
 --------------------
 CI with travis: https://travis-ci.org/Protofy/protofy_common
