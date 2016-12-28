@@ -4,6 +4,7 @@ protofy_common
 ==============
 
 Some common erlang modules, types and macros used by protofy.
+Compatible to R16B03+
 
 common_types.hrl
 -----------------

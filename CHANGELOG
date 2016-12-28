@@ -1,3 +1,7 @@
+1.5.1
+------
+- Compatibility fixes for R16B03+
+
 1.5.0
 ------
 - Added protofy_util:shuffle/1
