@@ -49,4 +49,4 @@
 -spec shuffle(list()) -> list().
 %% ====================================================================
 shuffle(List) when is_list(List) ->
-  [Elem || {_, Elem} <- lists:keysort(1, [{random:uniform(), E} || E <- List])].
+  [Elem || {_, Elem} <- lists:keysort(1, [{rand:uniform(), E} || E <- List])].

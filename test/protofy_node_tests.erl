@@ -130,11 +130,14 @@ configure_undefined() ->
 %% Internal functions
 %% ====================================================================
 start_node() ->
-  net_kernel:start(
-    [erlang:list_to_atom(
-     "protofy_node_tests_" ++ erlang:integer_to_list(
-       crypto:rand_uniform(1000000, 9999999))),
-     shortnames]),
+  _ = os:cmd("empd -daemon"),
+  Name = erlang:list_to_atom(
+    "protofy_node_tests_" ++ erlang:integer_to_list(
+      1000000 + rand:uniform(8999999))),
+  Options  = #{
+    name_domain => shortnames
+  },
+  net_kernel:start(Name, Options),
   ok.
 
 
