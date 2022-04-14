@@ -1,6 +1,6 @@
 %% ====================================================================
 %%
-%% Copyright (c) Protofy GmbH & Co. KG, Kaiser-Wilhelm-Straße 85, 20355 Hamburg/Germany and individual contributors.
+%% Copyright (c) Protofy GmbH & Co. KG, Herrengraben 30, 20459 Hamburg/Germany and individual contributors.
 %% All rights reserved.
 %%
 %% Redistribution and use in source and binary forms, with or without modification,
