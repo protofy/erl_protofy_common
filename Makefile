@@ -1,4 +1,4 @@
-REBAR=`which rebar || echo ./rebar`
+REBAR=`which rebar3`
 all: compile docs
 update: get-deps update-deps
 full: clean get-deps update-deps compile docs tests
