@@ -20,7 +20,7 @@ jobs:
           - '23.*'
           - '24.*'
         rebar3:
-          - '3.18.0'
+          - '3.17.0'
     steps:
       - uses: actions/checkout@v2
       - uses: erlef/setup-beam@v1
