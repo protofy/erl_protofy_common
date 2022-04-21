@@ -1,3 +1,12 @@
+2.0.0
+------
+- Migrated from rebar 2 to rebar3
+- Migrated from Travis-CI to GitHub Workflow
+- Testing OTP releases 22-24
+
+Breaking Changes:
+- Removed protofy_pulse module
+
 1.5.1
 ------
 - Compatibility fixes for R16B03+

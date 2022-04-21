@@ -18,3 +18,4 @@ priv/*
 test/ct/logs/*
 test/ct/config/*.config
 .rebar
+_build

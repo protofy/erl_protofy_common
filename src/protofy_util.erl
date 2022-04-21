@@ -1,6 +1,6 @@
 %% ====================================================================
 %%
-%% Copyright (c) Protofy GmbH & Co. KG, Kaiser-Wilhelm-Straße 85, 20355 Hamburg/Germany and individual contributors.
+%% Copyright (c) Protofy GmbH & Co. KG, Herrengraben 30, 20459 Hamburg/Germany and individual contributors.
 %% All rights reserved.
 %%
 %% Redistribution and use in source and binary forms, with or without modification,
@@ -49,4 +49,4 @@
 -spec shuffle(list()) -> list().
 %% ====================================================================
 shuffle(List) when is_list(List) ->
-  [Elem || {_, Elem} <- lists:keysort(1, [{random:uniform(), E} || E <- List])].
+  [Elem || {_, Elem} <- lists:keysort(1, [{rand:uniform(), E} || E <- List])].
