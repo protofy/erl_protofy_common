@@ -14,18 +14,15 @@ jobs:
     strategy:
       matrix:
         otp:
-#          - '20.*'
-#          - '21.*'
           - '22.*'
           - '23.*'
           - '24.*'
         rebar3:
-          - '3.17.0'
+          - '3.18.0'
     steps:
       - uses: actions/checkout@v2
       - uses: erlef/setup-beam@v1
         with:
           otp-version: ${{matrix.otp}}
           rebar3-version: ${{matrix.rebar3}}
-      - run: epmd -daemon
       - run: rebar3 eunit

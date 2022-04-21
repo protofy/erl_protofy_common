@@ -130,7 +130,7 @@ configure_undefined() ->
 %% Internal functions
 %% ====================================================================
 start_node() ->
-  _ = os:cmd("empd -daemon"),
+  _ = os:cmd("epmd -daemon"),
   Name = erlang:list_to_atom(
     "protofy_node_tests_" ++ erlang:integer_to_list(
       1000000 + rand:uniform(8999999))),
